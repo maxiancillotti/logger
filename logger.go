@@ -39,9 +39,10 @@ func Field(key string, value interface{}) zap.Field {
 	return zap.Any(key, value)
 }
 
-func Debug(msg string, requestID string, fields ...zap.Field) {
+func Debug(msg string, requestID string, err error, status int, fields ...zap.Field) {
 
 	fields = addFields(requestID, fields...)
+	fields = addErrorFields(err, status, fields...)
 	logger.Debug(msg, fields...)
 }
 

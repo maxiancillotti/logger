@@ -21,6 +21,7 @@ func addErrorFields(err error, status int, fields ...zap.Field) []zap.Field {
 	if err == nil {
 		fields = append(fields,
 			zap.Any("error", "error received is nil"),
+			zap.Any("status", status),
 		)
 		return fields
 	}
