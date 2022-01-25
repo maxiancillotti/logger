@@ -56,7 +56,7 @@ func Warn(msg string, requestID string, err error, status int, fields ...zap.Fie
 
 	fields = addFields(requestID, fields...)
 	fields = addErrorFields(err, status, fields...)
-	logger.Error(msg, fields...)
+	logger.Warn(msg, fields...)
 }
 
 func Error(msg string, requestID string, err error, status int, fields ...zap.Field) {
