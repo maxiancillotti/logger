@@ -13,7 +13,7 @@ func init() {
 	logConfig := zap.Config{
 		OutputPaths: []string{"stdout"},
 		Encoding:    "json",
-		Level:       zap.NewAtomicLevelAt(zap.InfoLevel),
+		Level:       zap.NewAtomicLevelAt(zap.DebugLevel),
 		EncoderConfig: zapcore.EncoderConfig{
 			MessageKey:   "msg",
 			LevelKey:     "level",
