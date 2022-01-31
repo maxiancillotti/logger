@@ -19,7 +19,7 @@ func init() {
 			LevelKey:     "level",
 			TimeKey:      "time",
 			EncodeTime:   zapcore.ISO8601TimeEncoder,
-			EncodeLevel:  zapcore.LowercaseColorLevelEncoder,
+			EncodeLevel:  zapcore.LowercaseLevelEncoder,
 			EncodeCaller: zapcore.ShortCallerEncoder,
 		},
 	}
