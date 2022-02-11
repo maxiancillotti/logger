@@ -39,9 +39,7 @@ func (l *logger) Flush() {
 	l.corelogger.Sync()
 }
 
-func (l *logger) Field(key string, value interface{}) zap.Field {
-	return zap.Any(key, value)
-}
+// Logging methods
 
 func (l *logger) Info(msg string, requestID string, fields ...zap.Field) {
 
@@ -68,4 +66,18 @@ func (l *logger) Debug(msg string, requestID string, err error, status int, fiel
 	fields = addFields(requestID, fields...)
 	fields = addErrorFields(err, status, fields...)
 	l.corelogger.Debug(msg, fields...)
+}
+
+// Field methods
+
+func (l *logger) Field(key string, value interface{}) zap.Field {
+	return zap.Any(key, value)
+}
+
+func (l *logger) StringField(key string, value string) zap.Field {
+	return zap.String(key, value)
+}
+
+func (l *logger) IntField(key string, value int) zap.Field {
+	return zap.Int(key, value)
 }
