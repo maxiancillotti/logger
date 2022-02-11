@@ -10,7 +10,7 @@ import (
 func addFields(requestID string, fields ...zap.Field) []zap.Field {
 
 	fields = append(fields,
-		zap.Any("request_id", requestID),
+		zap.String("request_id", requestID),
 	)
 
 	return fields
@@ -20,8 +20,8 @@ func addErrorFields(err error, status int, fields ...zap.Field) []zap.Field {
 
 	if err == nil {
 		fields = append(fields,
-			zap.Any("error", "error received is nil"),
-			zap.Any("status", status),
+			zap.String("error", "error logged is nil"),
+			zap.Int("status", status),
 		)
 		return fields
 	}
@@ -35,10 +35,10 @@ func addErrorFields(err error, status int, fields ...zap.Field) []zap.Field {
 	}
 
 	fields = append(fields,
-		zap.Any("error", errorMsg),
-		zap.Any("error_stack", errorStack),
-		zap.Any("error_cause", errorCause),
-		zap.Any("status", status),
+		zap.String("error", errorMsg),
+		zap.String("error_stack", errorStack),
+		zap.String("error_cause", errorCause),
+		zap.Int("status", status),
 	)
 
 	return fields

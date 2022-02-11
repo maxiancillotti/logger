@@ -5,8 +5,12 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+type logger struct {
+	corelogger *zap.Logger
+}
+
 var (
-	logger *zap.Logger
+	globlalLogger logger // *zap.Logger
 )
 
 func init() {
@@ -24,44 +28,44 @@ func init() {
 		},
 	}
 	var err error
-	logger, err = logConfig.Build()
+	globlalLogger.corelogger, err = logConfig.Build()
 	if err != nil {
 		panic(err)
 	}
 }
 
 // Flushes any buffered log entries. Applications should take care to call Flush before exiting.
-func Flush() {
-	logger.Sync()
+func (l *logger) Flush() {
+	l.corelogger.Sync()
 }
 
-func Field(key string, value interface{}) zap.Field {
+func (l *logger) Field(key string, value interface{}) zap.Field {
 	return zap.Any(key, value)
 }
 
-func Debug(msg string, requestID string, err error, status int, fields ...zap.Field) {
+func (l *logger) Info(msg string, requestID string, fields ...zap.Field) {
+
+	fields = addFields(requestID, fields...)
+	l.corelogger.Info(msg, fields...)
+}
+
+func (l *logger) Warn(msg string, requestID string, err error, status int, fields ...zap.Field) {
 
 	fields = addFields(requestID, fields...)
 	fields = addErrorFields(err, status, fields...)
-	logger.Debug(msg, fields...)
+	l.corelogger.Warn(msg, fields...)
 }
 
-func Info(msg string, requestID string, fields ...zap.Field) {
-
-	fields = addFields(requestID, fields...)
-	logger.Info(msg, fields...)
-}
-
-func Warn(msg string, requestID string, err error, status int, fields ...zap.Field) {
+func (l *logger) Error(msg string, requestID string, err error, status int, fields ...zap.Field) {
 
 	fields = addFields(requestID, fields...)
 	fields = addErrorFields(err, status, fields...)
-	logger.Warn(msg, fields...)
+	l.corelogger.Error(msg, fields...)
 }
 
-func Error(msg string, requestID string, err error, status int, fields ...zap.Field) {
+func (l *logger) Debug(msg string, requestID string, err error, status int, fields ...zap.Field) {
 
 	fields = addFields(requestID, fields...)
 	fields = addErrorFields(err, status, fields...)
-	logger.Error(msg, fields...)
+	l.corelogger.Debug(msg, fields...)
 }
