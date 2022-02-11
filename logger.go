@@ -1,12 +1,15 @@
 package logger
 
 import (
+	"sync"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 type logger struct {
 	corelogger *zap.Logger
+	once       sync.Once
 }
 
 var (
@@ -14,24 +17,26 @@ var (
 )
 
 func build() {
-	logConfig := zap.Config{
-		OutputPaths: []string{"stdout"},
-		Encoding:    "json",
-		Level:       zap.NewAtomicLevelAt(zap.DebugLevel),
-		EncoderConfig: zapcore.EncoderConfig{
-			MessageKey:   "msg",
-			LevelKey:     "level",
-			TimeKey:      "time",
-			EncodeTime:   zapcore.ISO8601TimeEncoder,
-			EncodeLevel:  zapcore.LowercaseLevelEncoder,
-			EncodeCaller: zapcore.ShortCallerEncoder,
-		},
-	}
-	var err error
-	globlalLogger.corelogger, err = logConfig.Build()
-	if err != nil {
-		panic(err)
-	}
+	globlalLogger.once.Do(func() {
+		logConfig := zap.Config{
+			OutputPaths: []string{"stdout"},
+			Encoding:    "json",
+			Level:       zap.NewAtomicLevelAt(zap.DebugLevel),
+			EncoderConfig: zapcore.EncoderConfig{
+				MessageKey:   "msg",
+				LevelKey:     "level",
+				TimeKey:      "time",
+				EncodeTime:   zapcore.ISO8601TimeEncoder,
+				EncodeLevel:  zapcore.LowercaseLevelEncoder,
+				EncodeCaller: zapcore.ShortCallerEncoder,
+			},
+		}
+		var err error
+		globlalLogger.corelogger, err = logConfig.Build()
+		if err != nil {
+			panic(err)
+		}
+	})
 }
 
 // Flushes any buffered log entries. Applications should take care to call Flush before exiting.
