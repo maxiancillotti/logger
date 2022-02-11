@@ -16,5 +16,6 @@ type Logger interface {
 }
 
 func New() Logger {
+	build()
 	return &globlalLogger
 }

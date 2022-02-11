@@ -13,7 +13,7 @@ var (
 	globlalLogger logger // *zap.Logger
 )
 
-func init() {
+func build() {
 	logConfig := zap.Config{
 		OutputPaths: []string{"stdout"},
 		Encoding:    "json",
